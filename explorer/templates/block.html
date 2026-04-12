@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Block</title>
+</head>
+<body style="background:#0f172a;color:white;font-family:Arial;padding:20px;">
+
+<h1>Block {{ block.index }}</h1>
+
+<p><b>Hash:</b> {{ block.hash }}</p>
+<p><b>Prev:</b> {{ block.prev_hash }}</p>
+
+<h2>Transactions</h2>
+
+{% for tx in block.transactions %}
+<div style="background:#1e293b;padding:10px;margin:10px;border-radius:10px;">
+    Inputs: {{ tx.inputs }} <br>
+    Outputs: {{ tx.outputs }}
+</div>
+{% endfor %}
+
+<a href="/">⬅ Back</a>
+
+</body>
+</html>

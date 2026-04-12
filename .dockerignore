@@ -1,0 +1,43 @@
+# Exclude unnecessary files from Docker build context
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.gitignore
+README.md
+readme08042026.md
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test files
+tests/
+.pytest_cache/
+
+# Data and config (will be mounted as volumes)
+data/
+config/
+*.json
+*.db
+
+# Documentation
+docs/
+*.md

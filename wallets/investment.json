@@ -1,0 +1,14 @@
+{
+  "type": "staking",
+  "address": "64df0efaaf38a854611e5b27dfa6239a0b43977f86d01679aceaf911c2028113",
+  "preferences": {
+    "default_fee": 0.01,
+    "max_fee": 1.0,
+    "auto_backup": true,
+    "require_pin": false,
+    "pin": ""
+  },
+  "transaction_history": [],
+  "wallets": {},
+  "updated_at": 1775924955.4545364
+}

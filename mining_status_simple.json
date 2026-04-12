@@ -1,0 +1,41 @@
+{
+  "timestamp": 1776007426.8261063,
+  "total_blocks": 3556,
+  "total_coins_mined": 177800.0,
+  "block_reward": 50.0,
+  "storage_type": "in-memory",
+  "utxo_file": "core/utxo.json",
+  "blockchain_file": "core/blockchain.json",
+  "recent_blocks": [
+    {
+      "height": 3551,
+      "hash": "0371685cb5fa59260bd95f0d450a1d53a3e089a758c0c8eaed06c621c237a105",
+      "timestamp": 1776006978.1047542,
+      "transactions": 1
+    },
+    {
+      "height": 3552,
+      "hash": "0dc43c36eb82fabcb2d8a4737494fe624a5f8f51f2478571fdb9499977b8f530",
+      "timestamp": 1776006979.7933125,
+      "transactions": 1
+    },
+    {
+      "height": 3553,
+      "hash": "0cda4bd37da6a02dc279e69c10213329671d0221574281307df5f3c3d941b157",
+      "timestamp": 1776006981.3346798,
+      "transactions": 1
+    },
+    {
+      "height": 3554,
+      "hash": "08e576f00af2466d4becfbe4f63e3c05bd4496f24b4bea9c8184925577d71208",
+      "timestamp": 1776006982.7733862,
+      "transactions": 1
+    },
+    {
+      "height": 3555,
+      "hash": "0adaedb01c28d50566db03e57405c1d0cfb34add6accad8d8a4380a59ccd76d2",
+      "timestamp": 1776006984.2599082,
+      "transactions": 1
+    }
+  ]
+}

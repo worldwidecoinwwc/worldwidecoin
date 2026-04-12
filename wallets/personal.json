@@ -1,0 +1,15 @@
+{
+  "type": "software",
+  "address": "8447847d1de0435f6beeaea73aa4409fe481273a34661f742168e431191f0d78",
+  "preferences": {
+    "default_fee": 0.01,
+    "max_fee": 1.0,
+    "auto_backup": true,
+    "require_pin": false,
+    "pin": ""
+  },
+  "transaction_history": [],
+  "wallets": {},
+  "updated_at": 1775924955.4500082,
+  "private_key": "5fec902f993aba61f41afef92ad019ed7aaf5b96485d633498b1dd0a9b068408"
+}

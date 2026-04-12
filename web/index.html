@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorldWideCoin - Blockchain Explorer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-coins"></i> WorldWideCoin</h1>
+            <nav>
+                <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+                <button class="nav-btn" onclick="showSection('wallet')">Wallet</button>
+                <button class="nav-btn" onclick="showSection('network')">Network</button>
+                <button class="nav-btn" onclick="showSection('mining')">Mining</button>
+            </nav>
+            <div class="api-status">
+                <span id="apiStatus">Connecting...</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Overview Section -->
+        <section id="overview" class="section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3><i class="fas fa-cubes"></i> Blocks</h3>
+                    <div class="stat-value" id="blockCount">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-clock"></i> Difficulty</h3>
+                    <div class="stat-value" id="difficulty">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-users"></i> Peers</h3>
+                    <div class="stat-value" id="peerCount">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-exchange-alt"></i> Mempool</h3>
+                    <div class="stat-value" id="mempoolCount">-</div>
+                </div>
+            </div>
+
+            <div class="recent-blocks">
+                <h2>Recent Blocks</h2>
+                <div id="recentBlocks" class="blocks-list">
+                    <div class="loading">Loading blocks...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wallet Section -->
+        <section id="wallet" class="section">
+            <div class="wallet-container">
+                <div class="wallet-card">
+                    <h2><i class="fas fa-wallet"></i> Wallet</h2>
+                    <div class="wallet-info">
+                        <div class="address-display">
+                            <label>Address:</label>
+                            <input type="text" id="walletAddress" placeholder="Enter your address" readonly>
+                            <button onclick="generateAddress()" class="btn-secondary">Generate New</button>
+                        </div>
+                        <div class="balance-display">
+                            <label>Balance:</label>
+                            <div class="balance-amount" id="balance">0.00 WWC</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wallet-card">
+                    <h2><i class="fas fa-paper-plane"></i> Send Coins</h2>
+                    <form id="sendForm" onsubmit="sendTransaction(event)">
+                        <div class="form-group">
+                            <label for="recipient">Recipient Address:</label>
+                            <input type="text" id="recipient" required placeholder="Enter recipient address">
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount (WWC):</label>
+                            <input type="number" id="amount" step="0.01" min="0.01" required placeholder="0.00">
+                        </div>
+                        <button type="submit" class="btn-primary">Send Transaction</button>
+                    </form>
+                </div>
+
+                <div class="wallet-card">
+                    <h2><i class="fas fa-history"></i> Recent Transactions</h2>
+                    <div id="transactionHistory" class="transaction-list">
+                        <div class="loading">Loading transactions...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Network Section -->
+        <section id="network" class="section">
+            <div class="network-container">
+                <div class="network-card">
+                    <h2><i class="fas fa-network-wired"></i> Connected Peers</h2>
+                    <div id="peersList" class="peers-list">
+                        <div class="loading">Loading peers...</div>
+                    </div>
+                </div>
+
+                <div class="network-card">
+                    <h2><i class="fas fa-plus"></i> Add Peer</h2>
+                    <form id="peerForm" onsubmit="addPeer(event)">
+                        <div class="form-group">
+                            <label for="peerHost">Host:</label>
+                            <input type="text" id="peerHost" required placeholder="127.0.0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="peerPort">Port:</label>
+                            <input type="number" id="peerPort" required placeholder="5001" min="1" max="65535">
+                        </div>
+                        <button type="submit" class="btn-primary">Add Peer</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mining Section -->
+        <section id="mining" class="section">
+            <div class="mining-container">
+                <div class="mining-card">
+                    <h2><i class="fas fa-hammer"></i> Mining Status</h2>
+                    <div id="miningStatus" class="mining-status">
+                        <div class="loading">Loading mining status...</div>
+                    </div>
+                </div>
+
+                <div class="mining-card">
+                    <h2><i class="fas fa-play"></i> Mining Controls</h2>
+                    <div class="mining-controls">
+                        <button onclick="startMining()" class="btn-primary" id="startMiningBtn">
+                            <i class="fas fa-play"></i> Start Mining
+                        </button>
+                        <button onclick="stopMining()" class="btn-secondary" id="stopMiningBtn" disabled>
+                            <i class="fas fa-stop"></i> Stop Mining
+                        </button>
+                    </div>
+                    <div class="mining-info">
+                        <p><strong>Note:</strong> Mining requires a running miner process. Use the CLI or Docker setup for mining.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Notifications -->
+    <div id="notifications" class="notifications"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

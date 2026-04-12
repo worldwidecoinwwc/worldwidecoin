@@ -1,0 +1,146 @@
+version: '3.8'
+
+services:
+  # Main blockchain node
+  node1:
+    build: .
+    container_name: worldwidecoin-node1
+    ports:
+      - "5001:5001"  # P2P port
+    volumes:
+      - ./data/node1:/app/data
+      - ./config/node1:/app/config
+    environment:
+      - NODE_PORT=5001
+      - API_PORT=5000
+      - NODE_ID=node1
+      - INITIAL_PEERS=node2:5002,node3:5003
+    command: ["python", "run_node.py"]
+    networks:
+      - worldwidecoin-network
+    restart: unless-stopped
+
+  # API server for node1
+  api1:
+    build: .
+    container_name: worldwidecoin-api1
+    ports:
+      - "8001:5000"  # API port
+    volumes:
+      - ./data/node1:/app/data
+      - ./config/node1:/app/config
+    environment:
+      - NODE_PORT=5001
+      - API_PORT=5000
+      - NODE_ID=node1
+    command: ["python", "cli/cli.py", "api", "--host", "0.0.0.0", "--port", "5000"]
+    depends_on:
+      - node1
+    networks:
+      - worldwidecoin-network
+    restart: unless-stopped
+
+  # Second blockchain node
+  node2:
+    build: .
+    container_name: worldwidecoin-node2
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./data/node2:/app/data
+      - ./config/node2:/app/config
+    environment:
+      - NODE_PORT=5002
+      - API_PORT=5000
+      - NODE_ID=node2
+      - INITIAL_PEERS=node1:5001,node3:5003
+    command: ["python", "run_node.py"]
+    networks:
+      - worldwidecoin-network
+    restart: unless-stopped
+
+  # API server for node2
+  api2:
+    build: .
+    container_name: worldwidecoin-api2
+    ports:
+      - "8002:5000"
+    volumes:
+      - ./data/node2:/app/data
+      - ./config/node2:/app/config
+    environment:
+      - NODE_PORT=5002
+      - API_PORT=5000
+      - NODE_ID=node2
+    command: ["python", "cli/cli.py", "api", "--host", "0.0.0.0", "--port", "5000"]
+    depends_on:
+      - node2
+    networks:
+      - worldwidecoin-network
+    restart: unless-stopped
+
+  # Third blockchain node
+  node3:
+    build: .
+    container_name: worldwidecoin-node3
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./data/node3:/app/data
+      - ./config/node3:/app/config
+    environment:
+      - NODE_PORT=5003
+      - API_PORT=5000
+      - NODE_ID=node3
+      - INITIAL_PEERS=node1:5001,node2:5002
+    command: ["python", "run_node.py"]
+    networks:
+      - worldwidecoin-network
+    restart: unless-stopped
+
+  # API server for node3
+  api3:
+    build: .
+    container_name: worldwidecoin-api3
+    ports:
+      - "8003:5000"
+    volumes:
+      - ./data/node3:/app/data
+      - ./config/node3:/app/config
+    environment:
+      - NODE_PORT=5003
+      - API_PORT=5000
+      - NODE_ID=node3
+    command: ["python", "cli/cli.py", "api", "--host", "0.0.0.0", "--port", "5000"]
+    depends_on:
+      - node3
+    networks:
+      - worldwidecoin-network
+    restart: unless-stopped
+
+  # Standalone miner (optional)
+  miner:
+    build: .
+    container_name: worldwidecoin-miner
+    volumes:
+      - ./data/miner:/app/data
+      - ./config/miner:/app/config
+    environment:
+      - NODE_ID=miner
+      - INITIAL_PEERS=node1:5001
+    command: ["python", "cli/cli.py", "mine"]
+    networks:
+      - worldwidecoin-network
+    restart: unless-stopped
+    profiles:
+      - miner
+
+networks:
+  worldwidecoin-network:
+    driver: bridge
+
+volumes:
+  node1_data:
+  node2_data:
+  node3_data:
+  miner_data:

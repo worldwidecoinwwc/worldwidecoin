@@ -1,0 +1,35 @@
+{
+  "type": "multisig",
+  "address": "56ebca60cbce2e18a2b005adb64f47988610d3e4713d34957353155377963a2d",
+  "preferences": {
+    "default_fee": 0.01,
+    "max_fee": 1.0,
+    "auto_backup": true,
+    "require_pin": false,
+    "pin": ""
+  },
+  "transaction_history": [],
+  "wallets": {},
+  "updated_at": 1775924955.4510148,
+  "multisig_config": {
+    "m": 2,
+    "n": 3,
+    "signers": [
+      {
+        "public_key": "sample_pubkey_1",
+        "name": "Alice",
+        "index": 0
+      },
+      {
+        "public_key": "sample_pubkey_2",
+        "name": "Bob",
+        "index": 1
+      },
+      {
+        "public_key": "sample_pubkey_3",
+        "name": "Charlie",
+        "index": 2
+      }
+    ]
+  }
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>WWC Mobile Wallet</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/elliptic@7.3.0/dist/elliptic.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0/build/sha256.min.js"></script>
+</head>
+<body>
+    <div class="app-shell">
+        <header class="topbar">
+            <div>
+                <h1>WWC Mobile Wallet</h1>
+                <p class="subtitle">Secure mobile wallet for WorldWideCoin</p>
+            </div>
+            <button id="refreshButton" class="icon-button" title="Refresh data">⟳</button>
+        </header>
+
+        <main>
+            <section class="card">
+                <h2>API Connection</h2>
+                <div class="form-row">
+                    <input id="apiUrlInput" type="text" placeholder="API URL (e.g. http://localhost:8001)">
+                    <button id="setApiButton" class="btn">Connect</button>
+                </div>
+                <div class="status-row">
+                    <span>API status:</span>
+                    <strong id="apiStatus">Offline</strong>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Wallet</h2>
+                <div class="wallet-row">
+                    <div>
+                        <label>Your Address</label>
+                        <textarea id="walletAddress" readonly rows="2"></textarea>
+                    </div>
+                    <div>
+                        <label>Private Key</label>
+                        <textarea id="walletPrivateKey" readonly rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="button-row">
+                    <button id="generateButton" class="btn">Generate Wallet</button>
+                    <button id="importButton" class="btn secondary">Import Private Key</button>
+                    <button id="backupButton" class="btn secondary">Backup Encrypted</button>
+                    <button id="downloadBackupButton" class="btn secondary">Download Backup</button>
+                    <button id="restoreButton" class="btn secondary">Restore Wallet</button>
+                    <button id="uploadBackupButton" class="btn secondary">Upload Backup</button>
+                </div>
+                <div class="form-group">
+                    <label>Encrypted Backup</label>
+                    <textarea id="backupOutput" rows="4" placeholder="Encrypted backup data appears here"></textarea>
+                    <input id="backupFileInput" type="file" accept=".json,.txt" hidden />
+                </div>
+                <div class="balance-row">
+                    <span>Balance</span>
+                    <strong id="balanceValue">0.00 WWC</strong>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Send Transaction</h2>
+                <div class="form-group">
+                    <label>Recipient Address</label>
+                    <input id="recipientInput" type="text" placeholder="Receiver address">
+                </div>
+                <div class="form-group">
+                    <label>Amount (WWC)</label>
+                    <input id="amountInput" type="number" step="0.01" min="0.01" placeholder="0.00">
+                </div>
+                <button id="sendButton" class="btn full">Send</button>
+            </section>
+
+            <section class="card">
+                <h2>Transaction History</h2>
+                <div id="historyList" class="history-list">
+                    <div class="empty-state">No transactions loaded yet.</div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Logs</h2>
+                <div id="logOutput" class="log-output"></div>
+            </section>
+        </main>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

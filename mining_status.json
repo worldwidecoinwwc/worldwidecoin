@@ -1,0 +1,42 @@
+{
+  "timestamp": 1775929949.9129755,
+  "total_blocks": 2107,
+  "total_coins_mined": 105300.0,
+  "coinbase_transactions": 2106,
+  "total_utxos": 4211,
+  "unspent_utxos": 4211,
+  "total_unspent_value": 2090.8944732733135,
+  "storage_type": "in-memory",
+  "recent_blocks": [
+    {
+      "height": 2102,
+      "hash": "0fa596f45a835c1553ae0dc492eec2e5d54e0de952c7b6efc70c0ea1b84986eb",
+      "timestamp": 1775929872.1174471,
+      "transactions": 1
+    },
+    {
+      "height": 2103,
+      "hash": "0c22c671b988eee08849332998f105ccb6912425118e10debb613546ce203f1e",
+      "timestamp": 1775929873.5358636,
+      "transactions": 1
+    },
+    {
+      "height": 2104,
+      "hash": "0da6f33a3bccdf34376c496ee2ce23a5f4769d32e18ddb7459cd172deac7532a",
+      "timestamp": 1775929874.9807532,
+      "transactions": 1
+    },
+    {
+      "height": 2105,
+      "hash": "06a05b0ff3d5f5cff689a25fa1688f3b077280a79d5631583154b1e3c8f9c56a",
+      "timestamp": 1775929876.390487,
+      "transactions": 1
+    },
+    {
+      "height": 2106,
+      "hash": "0dcb92eee91ca850140c04866877c64cc326612163c1006b574843fba1183f83",
+      "timestamp": 1775929877.7541463,
+      "transactions": 1
+    }
+  ]
+}

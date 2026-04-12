@@ -1,0 +1,5 @@
+ecdsa
+Flask
+flask-cors
+requests
+psutil

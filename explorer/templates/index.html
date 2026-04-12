@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WWC Explorer</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px;
+            display: inline-block;
+        }
+
+        .block {
+            background: #1e293b;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+
+        a {
+            color: #38bdf8;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🌍 WWC Dashboard</h1>
+
+<div class="card">
+    <h3>Total Blocks</h3>
+    <p id="blocks">{{ total_blocks }}</p>
+</div>
+
+<div class="card">
+    <h3>Latest Block</h3>
+    <p id="latest">{{ chain[0].index }}</p>
+</div>
+
+<h2>Latest Blocks</h2>
+
+<div id="blocks-list">
+{% for block in chain %}
+    <div class="block">
+        <b>Block {{ block.index }}</b><br>
+        Hash: {{ block.hash[:20] }}...<br>
+        <a href="/block/{{ block.index }}">View</a>
+    </div>
+{% endfor %}
+</div>
+
+<h2>Block Growth</h2>
+<canvas id="chart" width="400" height="150"></canvas>
+
+<script>
+async function loadStats() {
+    let res = await fetch("/api/stats");
+    let data = await res.json();
+
+    document.getElementById("blocks").innerText = data.blocks;
+    document.getElementById("latest").innerText = data.last_block;
+}
+
+loadStats();
+
+let ctx = document.getElementById('chart').getContext('2d');
+
+let chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: Array.from({length: 10}, (_, i) => i),
+        datasets: [{
+            label: 'Block Growth',
+            data: Array.from({length: 10}, (_, i) => i),
+        }]
+    }
+});
+</script>
+
+</body>
+</html>
