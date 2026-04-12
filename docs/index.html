@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorldWideCoin - Professional Cryptocurrency</title>
+    <title>WorldWideCoin (WWC) - Professional Cryptocurrency</title>
     <style>
         * {
             margin: 0;
@@ -12,182 +12,405 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
             color: #333;
-            min-height: 100vh;
+            line-height: 1.6;
         }
         
-        .container {
+        /* Bitcoin-style header */
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
             color: white;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+            position: relative;
+            z-index: 1;
         }
         
-        .header h1 {
-            font-size: 3.5em;
-            margin-bottom: 10px;
+        .logo::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            z-index: -1;
+            opacity: 0.3;
+            animation: pulse 2s infinite;
+        }
+        
+        .site-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #f39c12;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            background: linear-gradient(45deg, #FFD700, #FFA500);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: #f39c12;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #f39c12;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* Hero section */
+        .hero {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hexagons" width="50" height="43.4" patternUnits="userSpaceOnUse"><polygon points="25,0 50,14.35 50,43.4 25,57.75 0,43.4 0,14.35" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23hexagons)"/></svg>');
+            opacity: 0.2;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 4em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ffffff, #f39c12);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         
-        .header p {
-            font-size: 1.3em;
+        .hero .tagline {
+            font-size: 1.4em;
+            margin-bottom: 30px;
             opacity: 0.9;
+        }
+        
+        .hero .description {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            opacity: 0.8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Stats section */
+        .stats-section {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: 700;
             margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 60px;
         }
         
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+            gap: 30px;
+            margin-bottom: 60px;
         }
         
         .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 40px 30px;
             text-align: center;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #f39c12, #e67e22);
         }
         
         .stat-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         
         .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #667eea;
+            font-size: 3em;
+            font-weight: 700;
+            color: #f39c12;
             margin-bottom: 10px;
+            line-height: 1;
         }
         
         .stat-label {
             font-size: 1.1em;
-            color: #666;
-            font-weight: 600;
+            color: #6c757d;
+            font-weight: 500;
         }
         
-        .main-content {
+        /* Features section */
+        .features-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .features-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
-            margin-bottom: 40px;
         }
         
-        .content-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
         }
         
-        .content-card h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 1.8em;
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         
-        .feature-list {
-            list-style: none;
-            margin-bottom: 20px;
-        }
-        
-        .feature-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-        }
-        
-        .feature-list li:before {
-            content: "  ";
-            color: #4CAF50;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        .download-section {
-            text-align: center;
-            margin: 30px 0;
-        }
-        
-        .btn {
-            display: inline-block;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
             color: white;
-            padding: 15px 30px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            margin: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        .feature-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
         }
         
-        .btn-primary {
-            background: linear-gradient(45deg, #4CAF50, #45a049);
+        .feature-description {
+            color: #6c757d;
+            line-height: 1.6;
         }
         
-        .btn-secondary {
-            background: linear-gradient(45deg, #FF9800, #F57C00);
-        }
-        
+        /* Mining section */
         .mining-section {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+            padding: 80px 0;
+            background: white;
         }
         
-        .mining-info {
+        .mining-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
-            margin-top: 20px;
+            margin-top: 40px;
         }
         
         .mining-stat {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 30px 20px;
             text-align: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
+            border: 1px solid #dee2e6;
         }
         
         .mining-stat-value {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #4CAF50;
+            font-size: 2em;
+            font-weight: 700;
+            color: #27ae60;
+            margin-bottom: 10px;
         }
         
         .mining-stat-label {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 5px;
+            color: #6c757d;
+            font-weight: 500;
         }
         
+        /* Footer */
         .footer {
-            text-align: center;
+            background: #2c3e50;
             color: white;
-            padding: 30px 0;
-            opacity: 0.8;
+            padding: 60px 0 40px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section h3 {
+            color: #f39c12;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #bdc3c7;
+            text-decoration: none;
+            line-height: 1.8;
+        }
+        
+        .footer-section a:hover {
+            color: #f39c12;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #34495e;
+            color: #95a5a6;
         }
         
         .status-indicator {
@@ -195,132 +418,151 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
+            background: #27ae60;
             margin-right: 8px;
-            background: #4CAF50;
             animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
         }
         
-        .whitepaper-link {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #333;
-        }
-        
+        /* Responsive */
         @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
+            .nav-links {
+                display: none;
             }
             
-            .header h1 {
+            .hero h1 {
                 font-size: 2.5em;
             }
             
-            .stats-grid {
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .stats-grid, .features-grid {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>WorldWideCoin</h1>
-            <p><span class="status-indicator"></span>Professional Cryptocurrency with Fair Distribution</p>
-            <p>Continuous Emission Decay | CPU-Friendly Mining | No Premine</p>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="total-blocks">2,208+</div>
-                <div class="stat-label">Total Blocks</div>
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo-section">
+                <div class="logo">WWC</div>
+                <div class="site-title">WorldWideCoin</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="total-coins">2,200+</div>
-                <div class="stat-label">WWC Mined</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="current-reward">0.999</div>
-                <div class="stat-label">Current Reward (WWC)</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="max-supply">21M</div>
-                <div class="stat-label">Max Supply</div>
-            </div>
-        </div>
-        
-        <div class="main-content">
-            <div class="content-card">
-                <h2>Key Features</h2>
-                <ul class="feature-list">
-                    <li>Fair Launch - No premine, no ICO, mining-only issuance</li>
-                    <li>Continuous Emission Decay - Smooth 2.5% annual reward reduction</li>
-                    <li>CPU-Friendly Mining - SHA-256 algorithm accessible to everyone</li>
-                    <li>Treasury System - 5% automatic allocation for development</li>
-                    <li>Fee Burn Mechanism - 20% transaction fee burn for deflation</li>
-                    <li>Whitepaper Compliant - Professional monetary policy implementation</li>
-                    <li>Advanced Mining Suite - Professional mining software with optimization</li>
-                    <li>Real-time Monitoring - Web dashboard and remote control capabilities</li>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#mining">Mining</a></li>
+                    <li><a href="#download">Download</a></li>
+                    <li><a href="#whitepaper">Whitepaper</a></li>
                 </ul>
-                
-                <div class="download-section">
-                    <a href="https://github.com/worldwidecoinwwc/worldwidecoin/archive/refs/heads/main.zip" class="btn btn-primary">
-                        Download WorldWideCoin
-                    </a>
-                    <a href="https://github.com/worldwidecoinwwc/worldwidecoin/blob/main/professional_whitepaper.txt" class="btn whitepaper-link">
-                        Read Whitepaper
-                    </a>
-                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>WorldWideCoin</h1>
+            <p class="tagline"><span class="status-indicator"></span>Professional Cryptocurrency with Fair Distribution</p>
+            <p class="description">Continuous Emission Decay | CPU-Friendly Mining | No Premine | Treasury System</p>
+            <div class="hero-buttons">
+                <a href="https://github.com/worldwidecoinwwc/worldwidecoin/archive/refs/heads/main.zip" class="btn btn-primary">Download WorldWideCoin</a>
+                <a href="https://github.com/worldwidecoinwwc/worldwidecoin/blob/main/professional_whitepaper.txt" class="btn btn-secondary">Read Whitepaper</a>
             </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <h2 class="section-title">Network Statistics</h2>
+            <p class="section-subtitle">Real-time blockchain metrics and performance</p>
             
-            <div>
-                <div class="content-card">
-                    <h2>Network Status</h2>
-                    <div class="mining-info">
-                        <div class="mining-stat">
-                            <div class="mining-stat-value">Active</div>
-                            <div class="mining-stat-label">Network Status</div>
-                        </div>
-                        <div class="mining-stat">
-                            <div class="mining-stat-value">60s</div>
-                            <div class="mining-stat-label">Block Time</div>
-                        </div>
-                        <div class="mining-stat">
-                            <div class="mining-stat-value">7</div>
-                            <div class="mining-stat-label">Difficulty</div>
-                        </div>
-                        <div class="mining-stat">
-                            <div class="mining-stat-value">2.5%</div>
-                            <div class="mining-stat-label">Annual Decay</div>
-                        </div>
-                    </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-blocks">2,208+</div>
+                    <div class="stat-label">Total Blocks</div>
                 </div>
-                
-                <div class="content-card" style="margin-top: 20px;">
-                    <h2>Quick Start</h2>
-                    <ol style="padding-left: 20px; line-height: 1.8;">
-                        <li><strong>Download:</strong> Get the latest WorldWideCoin release</li>
-                        <li><strong>Install:</strong> Extract and run the setup script</li>
-                        <li><strong>Mine:</strong> Start mining with <code>python working_mining.py</code></li>
-                        <li><strong>Monitor:</strong> View real-time stats on the web dashboard</li>
-                        <li><strong>Advanced:</strong> Use the advanced mining suite for professional features</li>
-                    </ol>
-                    
-                    <div class="download-section" style="margin-top: 20px;">
-                        <a href="#mining-guide" class="btn btn-secondary">Mining Guide</a>
-                        <a href="#documentation" class="btn btn-secondary">Documentation</a>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-coins">2,200+</div>
+                    <div class="stat-label">WWC Mined</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="current-reward">0.999</div>
+                    <div class="stat-label">Current Reward (WWC)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="max-supply">21M</div>
+                    <div class="stat-label">Max Supply</div>
                 </div>
             </div>
         </div>
-        
-        <div class="mining-section">
-            <h2 style="text-align: center; margin-bottom: 20px;">Mining Information</h2>
-            <div class="mining-info">
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="section-title">Key Features</h2>
+            <p class="section-subtitle">Professional cryptocurrency with advanced features</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">  </div>
+                    <h3 class="feature-title">Fair Launch</h3>
+                    <p class="feature-description">No premine, no ICO, mining-only issuance. Every coin is mined through fair proof-of-work consensus.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">  </div>
+                    <h3 class="feature-title">Continuous Emission Decay</h3>
+                    <p class="feature-description">Smooth 2.5% annual reward reduction following continuous exponential decay model for sustainable economics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">  </div>
+                    <h3 class="feature-title">CPU-Friendly Mining</h3>
+                    <p class="feature-description">SHA-256 algorithm accessible to everyone. No specialized hardware required for fair participation.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">  </div>
+                    <h3 class="feature-title">Treasury System</h3>
+                    <p class="feature-description">5% automatic allocation for development and ecosystem growth through decentralized governance.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">  </div>
+                    <h3 class="feature-title">Fee Burn Mechanism</h3>
+                    <p class="feature-description">20% transaction fee burn creates deflationary pressure and increases network value.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">  </div>
+                    <h3 class="feature-title">Advanced Mining Suite</h3>
+                    <p class="feature-description">Professional mining software with performance optimization, remote monitoring, and profit analytics.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mining Section -->
+    <section class="mining-section" id="mining">
+        <div class="container">
+            <h2 class="section-title">Mining Information</h2>
+            <p class="section-subtitle">Professional mining specifications and requirements</p>
+            
+            <div class="mining-grid">
                 <div class="mining-stat">
                     <div class="mining-stat-value">SHA-256</div>
                     <div class="mining-stat-label">Algorithm</div>
@@ -334,6 +576,10 @@
                     <div class="mining-stat-label">Initial Reward</div>
                 </div>
                 <div class="mining-stat">
+                    <div class="mining-stat-value">60s</div>
+                    <div class="mining-stat-label">Block Time</div>
+                </div>
+                <div class="mining-stat">
                     <div class="mining-stat-value">5%</div>
                     <div class="mining-stat-label">Treasury</div>
                 </div>
@@ -342,23 +588,50 @@
                     <div class="mining-stat-label">Fee Burn</div>
                 </div>
                 <div class="mining-stat">
+                    <div class="mining-stat-value">2.5%</div>
+                    <div class="mining-stat-label">Annual Decay</div>
+                </div>
+                <div class="mining-stat">
                     <div class="mining-stat-value">~21M</div>
                     <div class="mining-stat-label">Max Supply</div>
                 </div>
             </div>
         </div>
-        
-        <div class="footer">
-            <p>&copy; 2026 WorldWideCoin Project</p>
-            <p>Professional cryptocurrency with fair distribution and sustainable economics</p>
-            <p>
-                <a href="https://github.com/worldwidecoinwwc/worldwidecoin" style="color: white;">GitHub Repository</a> | 
-                <a href="https://github.com/worldwidecoinwwc/worldwidecoin/blob/main/professional_whitepaper.txt" style="color: white;">Whitepaper</a> | 
-                <a href="https://github.com/worldwidecoinwwc/worldwidecoin/issues" style="color: white;">Support</a>
-            </p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>WorldWideCoin</h3>
+                    <p>Professional cryptocurrency with fair distribution and sustainable economics. Built for the future of digital finance.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <p><a href="https://github.com/worldwidecoinwwc/worldwidecoin">GitHub Repository</a></p>
+                    <p><a href="https://github.com/worldwidecoinwwc/worldwidecoin/blob/main/professional_whitepaper.txt">Whitepaper</a></p>
+                    <p><a href="https://github.com/worldwidecoinwwc/worldwidecoin/issues">Support</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Download</h3>
+                    <p><a href="https://github.com/worldwidecoinwwc/worldwidecoin/archive/refs/heads/main.zip">Latest Release</a></p>
+                    <p><a href="#mining">Mining Software</a></p>
+                    <p><a href="#features">Advanced Features</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Network Status</h3>
+                    <p><span class="status-indicator"></span> Network Active</p>
+                    <p>Block Height: 2,208+</p>
+                    <p>Current Reward: 0.999 WWC</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 WorldWideCoin Project. Professional cryptocurrency with fair distribution and sustainable economics.</p>
+            </div>
         </div>
-    </div>
-    
+    </footer>
+
     <script>
         // Animate numbers on load
         function animateValue(id, start, end, duration) {
@@ -409,6 +682,30 @@
         
         updateDynamicData();
         setInterval(updateDynamicData, 60000); // Update every minute
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'linear-gradient(135deg, #1a252f 0%, #2c3e50 100%)';
+            } else {
+                header.style.background = 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)';
+            }
+        });
     </script>
 </body>
 </html>
