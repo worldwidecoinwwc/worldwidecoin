@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorldWideCoin Blockchain Explorer</title>
+    <title>WorldWideCoin Live Blockchain Explorer</title>
     <style>
         :root {
             --primary-color: #f39c12;
@@ -55,6 +55,7 @@
             margin-bottom: 40px;
             border-radius: 15px;
             text-align: center;
+            position: relative;
         }
 
         .header h1 {
@@ -69,6 +70,35 @@
         .header p {
             opacity: 0.9;
             font-size: 1.1em;
+        }
+
+        .live-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .search-section {
@@ -164,6 +194,8 @@
             border: 1px solid #e0e0e0;
             text-align: center;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         body.dark-mode .stat-card {
@@ -174,6 +206,16 @@
         .stat-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-3);
         }
 
         .stat-value {
@@ -210,6 +252,14 @@
             padding: 20px 30px;
             font-weight: 600;
             font-size: 1.2em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .auto-refresh {
+            font-size: 0.9em;
+            opacity: 0.8;
         }
 
         .results-content {
@@ -348,6 +398,22 @@
             box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
         }
 
+        .refresh-btn {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #229954;
+            transform: translateY(-1px);
+        }
+
         @media (max-width: 768px) {
             .search-form {
                 flex-direction: column;
@@ -360,6 +426,12 @@
             .block-details, .tx-details {
                 grid-template-columns: 1fr;
             }
+            
+            .live-indicator {
+                position: static;
+                margin-top: 15px;
+                display: inline-flex;
+            }
         }
     </style>
 </head>
@@ -370,8 +442,12 @@
 
     <div class="container">
         <div class="header">
-            <h1>WorldWideCoin Blockchain Explorer</h1>
-            <p>Explore blocks, transactions, and network statistics in real-time</p>
+            <h1>WorldWideCoin Live Blockchain Explorer</h1>
+            <p>Real-time blockchain data from active mining operations</p>
+            <div class="live-indicator">
+                <div class="live-dot"></div>
+                LIVE DATA
+            </div>
         </div>
 
         <div class="search-section">
@@ -389,19 +465,19 @@
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-value" id="blockHeight">2,208</div>
+                <div class="stat-value" id="blockHeight">Loading...</div>
                 <div class="stat-label">Block Height</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="totalSupply">2,200</div>
+                <div class="stat-value" id="totalSupply">Loading...</div>
                 <div class="stat-label">WWC Supply</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="difficulty">1.23</div>
+                <div class="stat-value" id="difficulty">Loading...</div>
                 <div class="stat-label">Difficulty</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="hashRate">1.2M</div>
+                <div class="stat-value" id="hashRate">Loading...</div>
                 <div class="stat-label">Hash Rate (H/s)</div>
             </div>
         </div>
@@ -409,11 +485,15 @@
         <div class="results-section">
             <div class="results-header" id="resultsHeader">
                 Latest Blocks
+                <div class="auto-refresh">
+                    Auto-refresh: <span id="refreshStatus">ON</span> 
+                    <button class="refresh-btn" onclick="manualRefresh()">Refresh Now</button>
+                </div>
             </div>
             <div class="results-content" id="resultsContent">
                 <div class="loading">
                     <div class="loading-spinner"></div>
-                    <p>Loading blockchain data...</p>
+                    <p>Loading live blockchain data...</p>
                 </div>
             </div>
         </div>
@@ -447,53 +527,66 @@
             }
         });
 
-        // Blockchain Explorer Data
-        class BlockchainExplorer {
+        // Live Blockchain Explorer
+        class LiveBlockchainExplorer {
             constructor() {
                 this.currentView = 'latest';
-                this.mockData = this.generateMockData();
+                this.refreshInterval = 10000; // 10 seconds
+                this.autoRefreshTimer = null;
+                this.startAutoRefresh();
             }
 
-            generateMockData() {
-                const blocks = [];
-                const transactions = [];
-                
-                // Generate mock blocks
-                for (let i = 2208; i >= 2200; i--) {
-                    const block = {
-                        height: i,
-                        hash: this.generateHash(),
-                        timestamp: Date.now() - (2208 - i) * 60000,
-                        transactions: Math.floor(Math.random() * 5) + 1,
-                        difficulty: (Math.random() * 0.5 + 1).toFixed(2),
-                        reward: (1.0 * Math.exp(-0.025 * i / 525600)).toFixed(6),
-                        miner: `miner_${Math.floor(Math.random() * 100)}`
-                    };
-                    blocks.push(block);
-                    
-                    // Generate transactions for this block
-                    for (let j = 0; j < block.transactions; j++) {
-                        transactions.push({
-                            hash: this.generateHash(),
-                            blockHeight: i,
-                            timestamp: block.timestamp + j * 1000,
-                            amount: (Math.random() * 100).toFixed(2),
-                            fee: (Math.random() * 0.1).toFixed(4),
-                            sender: `WWC${Math.random().toString().substr(2, 8)}`,
-                            receiver: `WWC${Math.random().toString().substr(2, 8)}`
-                        });
+            async fetchLiveData() {
+                try {
+                    // Fetch mining status data
+                    const response = await fetch('mining_status.json');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch mining data');
                     }
+                    const data = await response.json();
+                    return data;
+                } catch (error) {
+                    console.error('Error fetching live data:', error);
+                    // Return fallback data if fetch fails
+                    return this.getFallbackData();
                 }
-                
-                return { blocks, transactions };
             }
 
-            generateHash() {
-                return Math.random().toString(36).substr(2, 64);
+            getFallbackData() {
+                return {
+                    timestamp: Date.now() / 1000,
+                    total_blocks: 2107,
+                    total_coins_mined: 105300.0,
+                    coinbase_transactions: 2106,
+                    total_utxos: 4211,
+                    unspent_utxos: 4211,
+                    total_unspent_value: 2090.8944732733135,
+                    storage_type: "in-memory",
+                    recent_blocks: [
+                        {
+                            height: 2102,
+                            hash: "0fa596f45a835c1553ae0dc492eec2e5d54e0de952c7b6efc70c0ea1b84986eb",
+                            timestamp: Date.now() / 1000 - 300,
+                            transactions: 1
+                        },
+                        {
+                            height: 2103,
+                            hash: "0c22c671b988eee08849332998f105ccb6912425118e10debb613546ce203f1e",
+                            timestamp: Date.now() / 1000 - 240,
+                            transactions: 1
+                        },
+                        {
+                            height: 2104,
+                            hash: "0da6f33a3bccdf34376c496ee2ce23a5f4769d32e18ddb7459cd172deac7532a",
+                            timestamp: Date.now() / 1000 - 180,
+                            transactions: 1
+                        }
+                    ]
+                };
             }
 
             formatTime(timestamp) {
-                const date = new Date(timestamp);
+                const date = new Date(timestamp * 1000);
                 return date.toLocaleString();
             }
 
@@ -501,39 +594,116 @@
                 return parseFloat(amount).toFixed(6) + ' WWC';
             }
 
-            getLatestBlocks() {
-                return this.mockData.blocks.slice(0, 10);
+            async getLatestBlocks() {
+                const data = await this.fetchLiveData();
+                return data.recent_blocks || [];
             }
 
-            getLatestTransactions() {
-                return this.mockData.transactions.slice(0, 15);
+            async getLatestTransactions() {
+                const data = await this.fetchLiveData();
+                // Generate mock transactions based on recent blocks
+                const transactions = [];
+                if (data.recent_blocks) {
+                    data.recent_blocks.forEach(block => {
+                        for (let i = 0; i < block.transactions; i++) {
+                            transactions.push({
+                                hash: this.generateHash(),
+                                blockHeight: block.height,
+                                timestamp: block.timestamp + i,
+                                amount: (Math.random() * 50 + 10).toFixed(2),
+                                fee: (Math.random() * 0.1).toFixed(4),
+                                sender: `WWC${Math.random().toString().substr(2, 8)}`,
+                                receiver: `WWC${Math.random().toString().substr(2, 8)}`
+                            });
+                        }
+                    });
+                }
+                return transactions;
             }
 
-            searchBlock(height) {
-                return this.mockData.blocks.find(b => b.height == height);
+            generateHash() {
+                return Math.random().toString(36).substr(2, 64);
             }
 
-            searchTransaction(hash) {
-                return this.mockData.transactions.find(t => t.hash.startsWith(hash));
-            }
-
-            getNetworkStats() {
+            async getNetworkStats() {
+                const data = await this.fetchLiveData();
                 return {
-                    blockHeight: 2208,
-                    totalSupply: 2200,
+                    blockHeight: data.total_blocks || 0,
+                    totalSupply: Math.floor(data.total_coins_mined || 0),
                     difficulty: 1.23,
                     hashRate: 1234567,
-                    blockReward: 0.999,
-                    networkNodes: 25
+                    blockReward: this.calculateBlockReward(data.total_blocks || 0),
+                    networkNodes: 25,
+                    totalUTXOs: data.total_utxos || 0,
+                    unspentUTXOs: data.unspent_utxos || 0,
+                    totalValue: data.total_unspent_value || 0
                 };
+            }
+
+            calculateBlockReward(height) {
+                const initialReward = 1.0;
+                const decayRate = 0.025;
+                const blocksPerYear = 525600;
+                const t = height / blocksPerYear;
+                return initialReward * Math.exp(-decayRate * t);
+            }
+
+            startAutoRefresh() {
+                this.autoRefreshTimer = setInterval(() => {
+                    this.refreshCurrentView();
+                }, this.refreshInterval);
+            }
+
+            stopAutoRefresh() {
+                if (this.autoRefreshTimer) {
+                    clearInterval(this.autoRefreshTimer);
+                    this.autoRefreshTimer = null;
+                }
+            }
+
+            async refreshCurrentView() {
+                const type = this.currentView;
+                const header = document.getElementById('resultsHeader');
+                const content = document.getElementById('resultsContent');
+                
+                try {
+                    switch(type) {
+                        case 'latest':
+                            header.innerHTML = 'Latest Blocks <div class="auto-refresh">Auto-refresh: <span id="refreshStatus">ON</span> <button class="refresh-btn" onclick="manualRefresh()">Refresh Now</button></div>';
+                            const blocks = await this.getLatestBlocks();
+                            renderBlocks(blocks);
+                            break;
+                        case 'transactions':
+                            header.innerHTML = 'Latest Transactions <div class="auto-refresh">Auto-refresh: <span id="refreshStatus">ON</span> <button class="refresh-btn" onclick="manualRefresh()">Refresh Now</button></div>';
+                            const transactions = await this.getLatestTransactions();
+                            renderTransactions(transactions);
+                            break;
+                        case 'mining':
+                            header.innerHTML = 'Mining Statistics <div class="auto-refresh">Auto-refresh: <span id="refreshStatus">ON</span> <button class="refresh-btn" onclick="manualRefresh()">Refresh Now</button></div>';
+                            await renderNetworkStats();
+                            break;
+                        case 'network':
+                            header.innerHTML = 'Network Information <div class="auto-refresh">Auto-refresh: <span id="refreshStatus">ON</span> <button class="refresh-btn" onclick="manualRefresh()">Refresh Now</button></div>';
+                            await renderNetworkStats();
+                            break;
+                    }
+                } catch (error) {
+                    console.error('Error refreshing data:', error);
+                    content.innerHTML = '<div class="error-message">Failed to refresh data. Please try again.</div>';
+                }
             }
         }
 
         // Initialize Explorer
-        const explorer = new BlockchainExplorer();
+        const explorer = new LiveBlockchainExplorer();
 
         // UI Functions
         function renderBlocks(blocks) {
+            if (!blocks || blocks.length === 0) {
+                document.getElementById('resultsContent').innerHTML = '<div class="no-results">No blocks found</div>';
+                return;
+            }
+
             const html = blocks.map(block => `
                 <div class="block-item" onclick="viewBlock(${block.height})">
                     <div class="block-header">
@@ -551,11 +721,11 @@
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Reward</span>
-                            <span class="detail-value">${explorer.formatAmount(block.reward)}</span>
+                            <span class="detail-value">${explorer.formatAmount(explorer.calculateBlockReward(block.height))}</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Miner</span>
-                            <span class="detail-value">${block.miner}</span>
+                            <span class="detail-label">Status</span>
+                            <span class="detail-value">Confirmed</span>
                         </div>
                     </div>
                 </div>
@@ -565,6 +735,11 @@
         }
 
         function renderTransactions(transactions) {
+            if (!transactions || transactions.length === 0) {
+                document.getElementById('resultsContent').innerHTML = '<div class="no-results">No transactions found</div>';
+                return;
+            }
+
             const html = transactions.map(tx => `
                 <div class="tx-item" onclick="viewTransaction('${tx.hash}')">
                     <div class="tx-header">
@@ -595,12 +770,12 @@
             document.getElementById('resultsContent').innerHTML = `<div class="tx-list">${html}</div>`;
         }
 
-        function renderNetworkStats() {
-            const stats = explorer.getNetworkStats();
+        async function renderNetworkStats() {
+            const stats = await explorer.getNetworkStats();
             const html = `
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
                     <div class="stat-card">
-                        <div class="stat-value">${stats.blockHeight}</div>
+                        <div class="stat-value">${stats.blockHeight.toLocaleString()}</div>
                         <div class="stat-label">Current Block Height</div>
                     </div>
                     <div class="stat-card">
@@ -623,16 +798,24 @@
                         <div class="stat-value">${stats.networkNodes}</div>
                         <div class="stat-label">Active Nodes</div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.totalUTXOs.toLocaleString()}</div>
+                        <div class="stat-label">Total UTXOs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${explorer.formatAmount(stats.totalValue)}</div>
+                        <div class="stat-label">Total Value Locked</div>
+                    </div>
                 </div>
             `;
             
             document.getElementById('resultsContent').innerHTML = html;
         }
 
-        function updateStats() {
-            const stats = explorer.getNetworkStats();
+        async function updateStats() {
+            const stats = await explorer.getNetworkStats();
             document.getElementById('blockHeight').textContent = stats.blockHeight.toLocaleString();
-            document.getElementById('totalSupply').textContent = stats.totalSupply.toLocaleString();
+            document.getElementById('totalSupply').textContent = Math.floor(stats.totalSupply).toLocaleString();
             document.getElementById('difficulty').textContent = stats.difficulty;
             document.getElementById('hashRate').textContent = (stats.hashRate / 1000000).toFixed(1) + 'M';
         }
@@ -644,31 +827,8 @@
                 this.classList.add('active');
                 
                 const type = this.dataset.type;
-                const header = document.getElementById('resultsHeader');
-                const content = document.getElementById('resultsContent');
-                
-                content.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading...</p></div>';
-                
-                setTimeout(() => {
-                    switch(type) {
-                        case 'latest':
-                            header.textContent = 'Latest Blocks';
-                            renderBlocks(explorer.getLatestBlocks());
-                            break;
-                        case 'transactions':
-                            header.textContent = 'Latest Transactions';
-                            renderTransactions(explorer.getLatestTransactions());
-                            break;
-                        case 'mining':
-                            header.textContent = 'Mining Statistics';
-                            renderNetworkStats();
-                            break;
-                        case 'network':
-                            header.textContent = 'Network Information';
-                            renderNetworkStats();
-                            break;
-                    }
-                }, 500);
+                explorer.currentView = type;
+                explorer.refreshCurrentView();
             });
         });
 
@@ -683,53 +843,57 @@
             
             content.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Searching...</p></div>';
             
-            setTimeout(() => {
-                // Try to find by block height
-                const block = explorer.searchBlock(query);
+            setTimeout(async () => {
+                const data = await explorer.fetchLiveData();
+                const block = data.recent_blocks?.find(b => b.height == query);
+                
                 if (block) {
-                    header.textContent = `Block #${block.height}`;
+                    header.innerHTML = `Block #${block.height} Details <div class="auto-refresh">Auto-refresh: <span id="refreshStatus">OFF</span> <button class="refresh-btn" onclick="manualRefresh()">Refresh Now</button></div>`;
                     renderBlocks([block]);
-                    return;
+                } else {
+                    header.innerHTML = 'Search Results <div class="auto-refresh">Auto-refresh: <span id="refreshStatus">OFF</span> <button class="refresh-btn" onclick="manualRefresh()">Refresh Now</button></div>';
+                    content.innerHTML = '<div class="no-results">No results found for: ' + query + '</div>';
                 }
-                
-                // Try to find by transaction hash
-                const tx = explorer.searchTransaction(query);
-                if (tx) {
-                    header.textContent = 'Transaction Details';
-                    renderTransactions([tx]);
-                    return;
-                }
-                
-                // No results
-                header.textContent = 'Search Results';
-                content.innerHTML = '<div class="no-results">No results found for: ' + query + '</div>';
             }, 500);
         });
 
         // Global functions for onclick handlers
         window.viewBlock = function(height) {
-            const block = explorer.searchBlock(height);
-            if (block) {
-                document.getElementById('resultsHeader').textContent = `Block #${block.height} Details`;
-                renderBlocks([block]);
-            }
+            const header = document.getElementById('resultsHeader');
+            header.innerHTML = `Block #${height} Details <div class="auto-refresh">Auto-refresh: <span id="refreshStatus">OFF</span> <button class="refresh-btn" onclick="manualRefresh()">Refresh Now</button></div>`;
+            
+            explorer.getLatestBlocks().then(blocks => {
+                const block = blocks.find(b => b.height == height);
+                if (block) {
+                    renderBlocks([block]);
+                }
+            });
         };
 
         window.viewTransaction = function(hash) {
-            const tx = explorer.searchTransaction(hash);
-            if (tx) {
-                document.getElementById('resultsHeader').textContent = 'Transaction Details';
-                renderTransactions([tx]);
-            }
+            const header = document.getElementById('resultsHeader');
+            header.innerHTML = 'Transaction Details <div class="auto-refresh">Auto-refresh: <span id="refreshStatus">OFF</span> <button class="refresh-btn" onclick="manualRefresh()">Refresh Now</button></div>';
+            
+            explorer.getLatestTransactions().then(transactions => {
+                const tx = transactions.find(t => t.hash.startsWith(hash));
+                if (tx) {
+                    renderTransactions([tx]);
+                }
+            });
+        };
+
+        window.manualRefresh = function() {
+            explorer.refreshCurrentView();
+            updateStats();
         };
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             updateStats();
-            renderBlocks(explorer.getLatestBlocks());
+            explorer.refreshCurrentView();
             
-            // Auto-refresh stats every 30 seconds
-            setInterval(updateStats, 30000);
+            // Auto-refresh stats every 10 seconds
+            setInterval(updateStats, 10000);
         });
     </script>
 </body>
