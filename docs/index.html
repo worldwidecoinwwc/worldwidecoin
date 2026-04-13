@@ -468,6 +468,7 @@
                     <li><a href="#home">Home</a></li>
                     <li><a href="#features">Features</a></li>
                     <li><a href="#mining">Mining</a></li>
+                    <li><a href="#api">API</a></li>
                     <li><a href="#download">Download</a></li>
                     <li><a href="#whitepaper">Whitepaper</a></li>
                 </ul>
@@ -483,6 +484,7 @@
             <p class="description">Continuous Emission Decay | CPU-Friendly Mining | No Premine | Treasury System</p>
             <div class="hero-buttons">
                 <a href="https://github.com/worldwidecoinwwc/worldwidecoin/archive/refs/heads/main.zip" class="btn btn-primary">Download WorldWideCoin</a>
+                <a href="#api" class="btn btn-secondary">API Documentation</a>
                 <a href="https://github.com/worldwidecoinwwc/worldwidecoin/blob/main/professional_whitepaper.txt" class="btn btn-secondary">Read Whitepaper</a>
             </div>
         </div>
@@ -599,6 +601,98 @@
         </div>
     </section>
 
+    <!-- API Documentation Section -->
+    <section class="features-section" id="api">
+        <div class="container">
+            <h2 class="section-title">API Documentation</h2>
+            <p class="section-subtitle">Complete REST API for blockchain integration and development</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">API</div>
+                    <h3 class="feature-title">REST API</h3>
+                    <p class="feature-description">Complete RESTful API for blockchain operations, transactions, mining, and wallet management. JSON responses with comprehensive error handling.</p>
+                    <br>
+                    <a href="api.md" class="btn btn-primary">View API Docs</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">WS</div>
+                    <h3 class="feature-title">WebSocket API</h3>
+                    <p class="feature-description">Real-time WebSocket connections for live updates on new blocks, transactions, and mining operations.</p>
+                    <br>
+                    <a href="api.md#websocket-api" class="btn btn-primary">WebSocket Docs</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">SDK</div>
+                    <h3 class="feature-title">SDK Examples</h3>
+                    <p class="feature-description">Ready-to-use code examples in Python and JavaScript for quick integration with your applications.</p>
+                    <br>
+                    <a href="api.md#sdk-examples" class="btn btn-primary">View Examples</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Blockchain</div>
+                    <h3 class="feature-title">Blockchain Operations</h3>
+                    <p class="feature-description">Get blockchain info, retrieve blocks by height or hash, access latest blocks, and monitor network status.</p>
+                    <br>
+                    <a href="api.md#blockchain-operations" class="btn btn-primary">Blockchain API</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Transaction</div>
+                    <h3 class="feature-title">Transaction Management</h3>
+                    <p class="feature-description">Submit transactions, retrieve transaction details, and monitor confirmation status with full UTXO support.</p>
+                    <br>
+                    <a href="api.md#transaction-operations" class="btn btn-primary">Transaction API</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Mining</div>
+                    <h3 class="feature-title">Mining Integration</h3>
+                    <p class="feature-description">Get mining information, submit mined blocks, and monitor mining performance with real-time statistics.</p>
+                    <br>
+                    <a href="api.md#mining-operations" class="btn btn-primary">Mining API</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Wallet</div>
+                    <h3 class="feature-title">Wallet Functions</h3>
+                    <p class="feature-description">Manage wallet balances, generate addresses, send transactions, and monitor wallet activity.</p>
+                    <br>
+                    <a href="api.md#wallet-operations" class="btn btn-primary">Wallet API</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Network</div>
+                    <h3 class="feature-title">Network Monitoring</h3>
+                    <p class="feature-description">Access network statistics, peer information, and monitor overall network health and performance.</p>
+                    <br>
+                    <a href="api.md#network-operations" class="btn btn-primary">Network API</a>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px;">
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">API Quick Start</h3>
+                <div style="background: #f8f9fa; padding: 30px; border-radius: 12px; border: 1px solid #dee2e6; max-width: 800px; margin: 0 auto;">
+                    <p style="margin-bottom: 15px;"><strong>Base URL:</strong> <code style="background: #e9ecef; padding: 5px 10px; border-radius: 4px;">http://localhost:8080/api/v1</code></p>
+                    <p style="margin-bottom: 15px;"><strong>Example Request:</strong></p>
+                    <pre style="background: #2c3e50; color: white; padding: 15px; border-radius: 8px; overflow-x: auto;">curl -X GET "http://localhost:8080/api/v1/blockchain/info"
+-H "Content-Type: application/json"</pre>
+                    <p style="margin-top: 15px;"><strong>Response:</strong></p>
+                    <pre style="background: #2c3e50; color: white; padding: 15px; border-radius: 8px; overflow-x: auto;">{
+  "success": true,
+  "data": {
+    "height": 12345,
+    "difficulty": 1.23,
+    "hash_rate": 1234567,
+    "total_supply": 21000000,
+    "block_reward": 50
+  }
+}</pre>
+                </div>
+                <div style="margin-top: 30px;">
+                    <a href="api.md" class="btn btn-primary" style="margin: 0 10px;">Complete API Documentation</a>
+                    <a href="https://github.com/worldwidecoinwwc/worldwidecoin/blob/main/docs/api.md" class="btn btn-secondary" style="margin: 0 10px;">View on GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -610,12 +704,14 @@
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <p><a href="https://github.com/worldwidecoinwwc/worldwidecoin">GitHub Repository</a></p>
+                    <p><a href="api.md">API Documentation</a></p>
                     <p><a href="https://github.com/worldwidecoinwwc/worldwidecoin/blob/main/professional_whitepaper.txt">Whitepaper</a></p>
                     <p><a href="https://github.com/worldwidecoinwwc/worldwidecoin/issues">Support</a></p>
                 </div>
                 <div class="footer-section">
                     <h3>Download</h3>
                     <p><a href="https://github.com/worldwidecoinwwc/worldwidecoin/archive/refs/heads/main.zip">Latest Release</a></p>
+                    <p><a href="#api">API Documentation</a></p>
                     <p><a href="#mining">Mining Software</a></p>
                     <p><a href="#features">Advanced Features</a></p>
                 </div>
