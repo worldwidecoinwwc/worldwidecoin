@@ -18,12 +18,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.worldwidecoin.wallet.presentation.screens.wallet.WalletScreen
-import com.worldwidecoin.wallet.presentation.screens.explorer.BlockchainExplorerScreen
-import com.worldwidecoin.wallet.presentation.screens.mining.MiningScreen
-import com.worldwidecoin.wallet.presentation.screens.settings.SettingsScreen
-import com.worldwidecoin.wallet.presentation.screens.receive.ReceiveScreen
-import com.worldwidecoin.wallet.presentation.screens.send.SendScreen
+import com.worldwidecoin.presentation.screens.wallet.WalletScreen
+import com.worldwidecoin.presentation.screens.explorer.BlockchainExplorerScreen
+import com.worldwidecoin.presentation.screens.mining.MiningScreen
+import com.worldwidecoin.presentation.screens.settings.SettingsScreen
 
 @Composable
 fun WorldWideCoinNavigation(navController: NavController) {
