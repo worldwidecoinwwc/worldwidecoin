@@ -1171,9 +1171,84 @@ npm run ios</pre>
             }, 500);
         });
         
-        // Update time-based data
-        function updateDynamicData() {
-            // Update current reward based on continuous decay
+        // Real-time blockchain data integration
+        let apiBase = 'http://localhost:5000/api';
+        let dataUpdateInterval;
+        
+        async function fetchBlockchainData() {
+            try {
+                // Fetch network statistics
+                const statsResponse = await fetch(`${apiBase}/stats`);
+                const statsData = await statsResponse.json();
+                
+                // Update network statistics
+                if (statsData.block_height) {
+                    document.getElementById('total-blocks').textContent = statsData.block_height.toLocaleString();
+                }
+                if (statsData.total_coins_mined) {
+                    document.getElementById('total-coins').textContent = statsData.total_coins_mined.toFixed(0) + '+';
+                }
+                if (statsData.current_reward) {
+                    document.getElementById('current-reward').textContent = statsData.current_reward.toFixed(3);
+                }
+                if (statsData.max_supply) {
+                    document.getElementById('max-supply').textContent = (statsData.max_supply / 1000000).toFixed(0) + 'M';
+                }
+                
+                // Update footer network status
+                const footerStatus = document.querySelector('.footer-section p');
+                if (footerStatus && footerStatus.textContent.includes('Network Active')) {
+                    footerStatus.innerHTML = `<span class="status-indicator"></span> ${statsData.network_status || 'Network Active'}`;
+                }
+                
+                // Update footer stats
+                const footerStats = document.querySelectorAll('.footer-section p');
+                footerStats.forEach(stat => {
+                    if (stat.textContent.includes('Block Height:')) {
+                        stat.textContent = `Block Height: ${statsData.block_height.toLocaleString()}`;
+                    } else if (stat.textContent.includes('Current Reward:')) {
+                        stat.textContent = `Current Reward: ${statsData.current_reward.toFixed(3)} WWC`;
+                    } else if (stat.textContent.includes('Hash Rate:')) {
+                        stat.textContent = `Hash Rate: ${statsData.network_hash_rate || 'Growing'}`;
+                    }
+                });
+                
+                console.log('Updated blockchain data:', statsData);
+                
+            } catch (error) {
+                console.error('Error fetching blockchain data:', error);
+                // Fallback to mock data if API is not available
+                updateFallbackData();
+            }
+        }
+        
+        async function fetchMiningData() {
+            try {
+                const miningResponse = await fetch(`${apiBase}/mining`);
+                const miningData = await miningResponse.json();
+                
+                // Update mining statistics if elements exist
+                const miningStats = document.querySelectorAll('.mining-stat-value');
+                if (miningStats.length >= 8) {
+                    miningStats[0].textContent = miningData.algorithm || 'SHA-256';
+                    miningStats[1].textContent = miningData.mining_type || 'CPU';
+                    miningStats[2].textContent = miningData.initial_reward?.toFixed(1) || '1.0 WWC';
+                    miningStats[3].textContent = miningData.block_time + 's' || '60s';
+                    miningStats[4].textContent = miningData.treasury_percentage + '%' || '5%';
+                    miningStats[5].textContent = miningData.fee_burn_percentage + '%' || '20%';
+                    miningStats[6].textContent = miningData.annual_decay + '%' || '2.5%';
+                    miningStats[7].textContent = '~' + (miningData.max_supply / 1000000).toFixed(0) + 'M' || '~21M';
+                }
+                
+                console.log('Updated mining data:', miningData);
+                
+            } catch (error) {
+                console.error('Error fetching mining data:', error);
+            }
+        }
+        
+        function updateFallbackData() {
+            // Fallback data when API is not available
             const blocks = 2208;
             const blocksPerYear = 525600;
             const decayRate = 0.025;
@@ -1182,11 +1257,28 @@ npm run ios</pre>
             const t = blocks / blocksPerYear;
             const currentReward = initialReward * Math.exp(-decayRate * t);
             
+            document.getElementById('total-blocks').textContent = blocks.toLocaleString() + '+';
+            document.getElementById('total-coins').textContent = '2,200+';
             document.getElementById('current-reward').textContent = currentReward.toFixed(3);
+            document.getElementById('max-supply').textContent = '21M';
+            
+            console.log('Using fallback data');
         }
         
-        updateDynamicData();
-        setInterval(updateDynamicData, 60000); // Update every minute
+        // Initialize real-time data updates
+        async function initializeRealTimeData() {
+            await fetchBlockchainData();
+            await fetchMiningData();
+            
+            // Update data every 30 seconds
+            dataUpdateInterval = setInterval(async () => {
+                await fetchBlockchainData();
+                await fetchMiningData();
+            }, 30000);
+        }
+        
+        // Start real-time updates
+        initializeRealTimeData();
         
         // Smooth scroll for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
