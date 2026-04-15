@@ -1,8 +1,12 @@
 import json
 import os
 import hashlib
+import tempfile
+import shutil
+import time
 
 UTXO_FILE = "utxo.json"
+UTXO_BACKUP_FILE = "utxo_backup.json"
 
 
 class UTXOSet:
@@ -15,28 +19,94 @@ class UTXOSet:
             self.load()
 
     def save(self):
+        """Save UTXO set with simple write approach to avoid file locking"""
         if not self.persistent:
             return
 
-        with open(UTXO_FILE, "w") as f:
-            json.dump(self.utxos, f)
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                # Create backup if file exists and this is first attempt
+                if attempt == 0 and os.path.exists(UTXO_FILE):
+                    try:
+                        shutil.copy2(UTXO_FILE, UTXO_BACKUP_FILE)
+                    except:
+                        pass  # Backup is optional
+                
+                # Simple direct write with retry logic
+                with open(UTXO_FILE, 'w') as f:
+                    json.dump(self.utxos, f, indent=2, separators=(',', ': '))
+                    f.flush()
+                # Success - exit retry loop
+                return
+                
+            except Exception as e:
+                if attempt == max_retries - 1:  # Last attempt failed
+                    print(f"Error saving UTXO file after {max_retries} attempts: {e}")
+                    # Try to restore from backup as last resort
+                    if os.path.exists(UTXO_BACKUP_FILE):
+                        try:
+                            shutil.copy2(UTXO_BACKUP_FILE, UTXO_FILE)
+                            print("Restored UTXO file from backup")
+                        except:
+                            print("Failed to restore UTXO backup")
+                    # Don't raise exception to allow mining to continue
+                    return
+                else:
+                    # Wait before retry
+                    time.sleep(0.1)
 
     def load(self):
+        """Load UTXO set with robust error handling and backup recovery"""
         if not self.persistent:
             return
 
+        # Try to load main file first
         if os.path.exists(UTXO_FILE):
             try:
-                with open(UTXO_FILE) as f:
-                    self.utxos = json.load(f)
+                with open(UTXO_FILE, 'r') as f:
+                    content = f.read()
+                    if content.strip():  # Check if file is not empty
+                        self.utxos = json.loads(content)
+                        return
+                    else:
+                        print("Warning: Empty UTXO file, starting fresh")
+                        self.utxos = {}
+                        return
             except (json.JSONDecodeError, IOError, ValueError) as e:
-                print(f"Warning: Corrupted UTXO file, starting fresh: {e}")
+                print(f"Warning: Corrupted UTXO file: {e}")
+                
+                # Try to restore from backup
+                if os.path.exists(UTXO_BACKUP_FILE):
+                    try:
+                        print("Attempting to restore from backup...")
+                        with open(UTXO_BACKUP_FILE, 'r') as f:
+                            content = f.read()
+                            if content.strip():
+                                self.utxos = json.loads(content)
+                                # Restore the backup as main file
+                                shutil.copy2(UTXO_BACKUP_FILE, UTXO_FILE)
+                                print("Successfully restored from backup")
+                                return
+                            else:
+                                print("Backup file is also empty")
+                    except Exception as backup_error:
+                        print(f"Failed to restore from backup: {backup_error}")
+                
+                # If both main and backup failed, start fresh
+                print("Starting with fresh UTXO set")
                 self.utxos = {}
-                # Remove corrupted file
-                try:
-                    os.remove(UTXO_FILE)
-                except:
-                    pass
+                
+                # Remove corrupted files
+                for file_path in [UTXO_FILE, UTXO_BACKUP_FILE]:
+                    try:
+                        if os.path.exists(file_path):
+                            os.remove(file_path)
+                    except:
+                        pass
+        else:
+            # No UTXO file exists, start fresh
+            self.utxos = {}
 
     def add_utxo(self, txid, index, address, amount):
         self.utxos[f"{txid}:{index}"] = {
